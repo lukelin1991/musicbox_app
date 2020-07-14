@@ -1,0 +1,339 @@
+  [1m[35m (206.1ms)[0m  [1m[35mCREATE DATABASE "music_box_backend_development" ENCODING = 'unicode'[0m
+  [1m[35m (80.0ms)[0m  [1m[35mCREATE DATABASE "music_box_backend_test" ENCODING = 'unicode'[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3365943661761599205)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20200714162635)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "username" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200714162635"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateArtists (20200714162817)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.9ms)[0m  [1m[35mCREATE TABLE "artists" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200714162817"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSongs (20200714163001)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.4ms)[0m  [1m[35mCREATE TABLE "songs" ("id" bigserial primary key, "name" character varying, "mp3" character varying, "cover_art" character varying, "artist_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_5ce8fd4cc7"
+FOREIGN KEY ("artist_id")
+  REFERENCES "artists" ("id")
+)[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE  INDEX  "index_songs_on_artist_id" ON "songs"  ("artist_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200714163001"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreatePlaylists (20200714163207)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE TABLE "playlists" ("id" bigserial primary key, "name" character varying, "user_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_d67ef1eb45"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE  INDEX  "index_playlists_on_user_id" ON "playlists"  ("user_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200714163207"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreatePlaylistSongs (20200714163240)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.4ms)[0m  [1m[35mCREATE TABLE "playlist_songs" ("id" bigserial primary key, "playlist_id" bigint NOT NULL, "song_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_282ee7fa4c"
+FOREIGN KEY ("playlist_id")
+  REFERENCES "playlists" ("id")
+, CONSTRAINT "fk_rails_4771edc43f"
+FOREIGN KEY ("song_id")
+  REFERENCES "songs" ("id")
+)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_playlist_songs_on_playlist_id" ON "playlist_songs"  ("playlist_id")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_playlist_songs_on_song_id" ON "playlist_songs"  ("song_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200714163240"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (2.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-07-14 18:32:40.697092"], ["updated_at", "2020-07-14 18:32:40.697092"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(3365943661761599205)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mPlaylistSong Load (0.6ms)[0m  [1m[34mSELECT "playlist_songs".* FROM "playlist_songs"[0m
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists"[0m
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Create (0.6ms)[0m  [1m[32mINSERT INTO "artists" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Paul Simon"], ["created_at", "2020-07-14 18:32:51.730624"], ["updated_at", "2020-07-14 18:32:51.730624"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Create (0.2ms)[0m  [1m[32mINSERT INTO "artists" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Talking Heads"], ["created_at", "2020-07-14 18:32:51.734903"], ["updated_at", "2020-07-14 18:32:51.734903"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Create (0.2ms)[0m  [1m[32mINSERT INTO "artists" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Dimash"], ["created_at", "2020-07-14 18:32:51.737930"], ["updated_at", "2020-07-14 18:32:51.737930"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("username", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["username", "Scott"], ["created_at", "2020-07-14 18:32:51.745846"], ["updated_at", "2020-07-14 18:32:51.745846"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSong Create (1.5ms)[0m  [1m[32mINSERT INTO "songs" ("name", "mp3", "cover_art", "artist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Diamonds On the Soles of her shoes"], ["mp3", "Paul_Simon_Diamonds.mp3"], ["cover_art", "PaulSimonCover.jpg"], ["artist_id", 1], ["created_at", "2020-07-14 18:32:51.783386"], ["updated_at", "2020-07-14 18:32:51.783386"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mSong Create (0.3ms)[0m  [1m[32mINSERT INTO "songs" ("name", "mp3", "cover_art", "artist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Once in a Lifetime"], ["mp3", "Talking_Heads_Lifetime.mp3"], ["cover_art", "TalkingHeadsCover.jpg"], ["artist_id", 2], ["created_at", "2020-07-14 18:32:51.790219"], ["updated_at", "2020-07-14 18:32:51.790219"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[36mSong Create (0.5ms)[0m  [1m[32mINSERT INTO "songs" ("name", "mp3", "cover_art", "artist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "S.O.S D'un Terrien en destresse"], ["mp3", "Dimash_SOS.mp3"], ["cover_art", "DimashCover.jpg"], ["artist_id", 3], ["created_at", "2020-07-14 18:32:51.795833"], ["updated_at", "2020-07-14 18:32:51.795833"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPlaylist Create (0.5ms)[0m  [1m[32mINSERT INTO "playlists" ("name", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Scotts Faves"], ["user_id", 1], ["created_at", "2020-07-14 18:32:51.807385"], ["updated_at", "2020-07-14 18:32:51.807385"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.2ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mPlaylistSong Create (0.5ms)[0m  [1m[32mINSERT INTO "playlist_songs" ("playlist_id", "song_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["playlist_id", 1], ["song_id", 1], ["created_at", "2020-07-14 18:32:51.819510"], ["updated_at", "2020-07-14 18:32:51.819510"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.1ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mPlaylistSong Create (0.3ms)[0m  [1m[32mINSERT INTO "playlist_songs" ("playlist_id", "song_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["playlist_id", 1], ["song_id", 2], ["created_at", "2020-07-14 18:32:51.825611"], ["updated_at", "2020-07-14 18:32:51.825611"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/" for ::1 at 2020-07-14 11:35:51 -0700
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /Library/Ruby/Gems/2.6.0/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /Library/Ruby/Gems/2.6.0/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 8.8ms | Allocations: 478)
+Completed 200 OK in 19ms (Views: 14.3ms | ActiveRecord: 0.0ms | Allocations: 2619)
+
+
+Started GET "/favicon.ico" for ::1 at 2020-07-14 11:35:52 -0700
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/user" for ::1 at 2020-07-14 11:36:01 -0700
+  
+ActionController::RoutingError (No route matches [GET] "/user"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/users'" for ::1 at 2020-07-14 11:36:04 -0700
+  
+ActionController::RoutingError (No route matches [GET] "/users'"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/users" for ::1 at 2020-07-14 11:36:07 -0700
+Processing by UsersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."user_id" = $1[0m  [["user_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:5:in `map'
+[active_model_serializers]   [1m[36mSong Load (0.9ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "playlist_songs" ON "songs"."id" = "playlist_songs"."song_id" WHERE "playlist_songs"."playlist_id" = $1[0m  [["playlist_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:8:in `map'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (65.05ms)
+Completed 200 OK in 117ms (Views: 75.9ms | ActiveRecord: 34.7ms | Allocations: 33786)
+
+
+Started GET "/users" for ::1 at 2020-07-14 11:36:30 -0700
+Processing by UsersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."user_id" = $1[0m  [["user_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:5:in `map'
+[active_model_serializers]   [1m[36mSong Load (1.1ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "playlist_songs" ON "songs"."id" = "playlist_songs"."song_id" WHERE "playlist_songs"."playlist_id" = $1[0m  [["playlist_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:8:in `map'
+[active_model_serializers]   [1m[36mArtist Load (0.8ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (13.02ms)
+Completed 200 OK in 19ms (Views: 15.0ms | ActiveRecord: 3.0ms | Allocations: 4741)
+
+
+Started GET "/users" for ::1 at 2020-07-14 11:44:40 -0700
+Processing by UsersController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mPlaylist Load (0.8ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."user_id" = $1[0m  [["user_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:5:in `map'
+[active_model_serializers]   [1m[36mSong Load (1.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "playlist_songs" ON "songs"."id" = "playlist_songs"."song_id" WHERE "playlist_songs"."playlist_id" = $1[0m  [["playlist_id", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:8:in `map'
+[active_model_serializers]   [1m[36mArtist Load (0.6ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers]   [1m[36mArtist Load (0.6ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/user_serializer.rb:13:in `block (2 levels) in playlists'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (16.49ms)
+Completed 200 OK in 22ms (Views: 16.7ms | ActiveRecord: 4.4ms | Allocations: 4845)
+
+
+Started GET "/playlists" for ::1 at 2020-07-14 11:45:29 -0700
+Processing by PlaylistsController#index as HTML
+  [1m[36mPlaylist Load (0.2ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:7:in `index'
+Completed 200 OK in 2ms (Views: 0.5ms | ActiveRecord: 0.2ms | Allocations: 988)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:45:36 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (5.43ms)
+Completed 200 OK in 9ms (Views: 7.8ms | ActiveRecord: 1.0ms | Allocations: 4348)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:45:46 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (7.27ms)
+Completed 200 OK in 9ms (Views: 8.2ms | ActiveRecord: 1.0ms | Allocations: 3974)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:46:05 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (26.37ms)
+Completed 200 OK in 28ms (Views: 27.2ms | ActiveRecord: 1.0ms | Allocations: 3977)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:46:14 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (7.65ms)
+Completed 200 OK in 10ms (Views: 8.9ms | ActiveRecord: 0.8ms | Allocations: 3991)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:47:06 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.5ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (7.55ms)
+Completed 200 OK in 10ms (Views: 8.3ms | ActiveRecord: 1.2ms | Allocations: 3974)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:47:46 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.6ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (7.86ms)
+Completed 200 OK in 10ms (Views: 8.7ms | ActiveRecord: 1.4ms | Allocations: 3974)
+
+
+Started GET "/songs" for ::1 at 2020-07-14 11:50:17 -0700
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:4:in `index'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.2ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers]   [1m[36mArtist Load (0.3ms)[0m  [1m[34mSELECT "artists".* FROM "artists" WHERE "artists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+[active_model_serializers]   ↳ app/serializers/song_serializer.rb:5:in `artist'
+[active_model_serializers] Rendered ActiveModel::Serializer::CollectionSerializer with ActiveModelSerializers::Adapter::Attributes (6.61ms)
+Completed 200 OK in 9ms (Views: 7.6ms | ActiveRecord: 0.9ms | Allocations: 3974)
+
+
