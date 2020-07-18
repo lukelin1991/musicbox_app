@@ -15,6 +15,7 @@ User.destroy_all
 a1 = Artist.create(name: "Paul Simon")
 a2 = Artist.create(name: "Talking Heads")
 a3 = Artist.create(name: "Dimash")
+
 #user
 u1 = User.create(username: "Scott")
 #songs
